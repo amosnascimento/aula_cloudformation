@@ -19,7 +19,7 @@ jobs:
     - name: Deploy Instance
       id: deploy
       run: |
-        aws cloudformation create-stack --stack-name TestStack --template-body file://Template.yaml
+        aws cloudformation create-stack --stack-name TestStack --template-body file://.github/Template.yaml
       continue-on-error: true
     - name: Update Instance
       if: steps.deploy.outcome != 'success'
