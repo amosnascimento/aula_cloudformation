@@ -1,24 +1,27 @@
-name: Push-to-EC2
+name: Create-EC2
 
-# Trigger deployment only on push to master branch
-on:
-  push:
-    branches:
-      - master
+on: push
 
 jobs:
-  deploy:
-    name: Deploy to EC2 on master branch push
+  prepare:
+    name : Run ec2 Deploy
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout the files
-        uses: actions/checkout@v2
-
-      - name: Deploy to Server 1
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.HOST_DNS }}
-          REMOTE_USER: ${{ secrets.USERNAME }}
-          TARGET: ${{ secrets.TARGET_DIR }}
+    - name: Setup Repo
+      uses: actions/checkout@v2
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    
+    - name: Deploy Instance
+      id: deploy
+      run: |
+        aws cloudformation create-stack --stack-name TestStack --template-body file://Template.yaml
+      continue-on-error: true
+    - name: Update Instance
+      if: steps.deploy.outcome != 'success'
+      run: |
+        aws cloudformation update-stack --stack-name TestStack --template-body file://Template.yaml
