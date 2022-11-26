@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  'AWS::CloudFormation::Designer':
+    f81a92d1-f52d-4d9e-947f-c4929aa3e24b:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 380
+        'y': 170
+      z: 0
+      embeds: []
+Resources:
+  EC2I1V9EQ:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: ami-0b0dcb5067f052a63
+      InstanceType: t2.micro
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: f81a92d1-f52d-4d9e-947f-c4929aa3e24b
